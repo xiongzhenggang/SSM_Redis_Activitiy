@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 启动不检查更新  -->
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="false"
+  monitoring="autodetect" dynamicConfig="true">
+<!-- java.io.tmpdir 所指地址:　操作系统不同 这个系统属性所表示的目录也不同
+On Windows: java.io.tmpdir:[C:\DOCUME~1\joshua\LOCALS~1\Temp\]
+On Linux: java.io.tmpdir: [/tmp]
+ -->
+    <diskStore path="${java.io.tmpdir}/${system.project_name}/cache" />
+     <!-- 全局默认cache配置 -->
+   <defaultCache
+     maxEntriesLocalHeap="10000"
+     eternal="false"
+     timeToIdleSeconds="120"
+     timeToLiveSeconds="120"
+     maxEntriesLocalDisk="10000000"
+     diskExpiryThreadIntervalSeconds="120"
+     memoryStoreEvictionPolicy="LRU"
+  />
+	<!-- IP白名单-->
+ <cache name="baseCache"
+    maxEntriesLocalHeap="10"
+    maxElementsInMemory="200" 
+    eternal="false"
+    timeToIdleSeconds="300"
+    timeToLiveSeconds="600"
+    copyOnRead="true"
+    copyOnWrite="true"
+    memoryStoreEvictionPolicy="LFU">
+  <persistence strategy="none"/>
+</cache>						
+ 						 <!--  LRU：（Least Recently Used） ,最近最少使用算法-->
+<!--必须属性：
+    name:设置缓存的名称，用于标志缓存,惟一
+    maxElementsInMemory:在内存中最大的对象数量
+    maxElementsOnDisk：在DiskStore中的最大对象数量，如为0，则没有限制
+    eternal：设置元素是否永久的，如果为永久，则timeout忽略
+    overflowToDisk：是否当memory中的数量达到限制后，保存到Disk
+    可选的属性：
+    timeToIdleSeconds：用于设置对象在cache中的最大闲置时间，就是 在一直不访问这个对象的前提下，这个对象可以在cache中的存活时间
+    timeToLiveSeconds：用于设置对象在cache中的最大存活时间，就是 无论对象访问或是不访问(闲置),这个对象在cache中的存活时间
+    diskPersistent：是否disk store在虚拟机启动时持久化。默认为false
+    diskExpiryThreadIntervalSeconds:运行disk终结线程的时间，默认为120秒
+    memoryStoreEvictionPolicy：策略关于Eviction  -->
+</ehcache>

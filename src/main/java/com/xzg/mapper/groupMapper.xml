@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.xzg.dao.GroupMapper">  
+ <cache />
+<select id="getUserById"  resultType="com.xzg.domain.User">    
+	select *  from
+						 User
+	where 
+				1=1
+         <if test="userId != 0L">
+            and userId=#{userId,jdbcType=NUMERIC}
+          </if>
+</select> 
+<!--配置一个resultMap 指定返回的类型 -->
+    <resultMap id="roleMap" type="com.xzg.domain.Group">
+         <id column="roleId" property="roleId" jdbcType="VARCHAR" />  
+        <result column="roleInfo" property="roleInfo" jdbcType="VARCHAR" />  
+        <result column="roleName" property="roleName" jdbcType="VARCHAR" />  
+        <result column="proleId" property="proleId" jdbcType="VARCHAR" />  
+         <result column="proleName" property="proleName" jdbcType="VARCHAR" />  
+    </resultMap>
+<select id="getGroupList" resultMap="roleMap"> 
+select * from  role 
+							where roleid in(
+								select roleid from user_role where userId=#{userId} 
+								)
+</select>
+<select id="getGroupById" resultType="com.xzg.domain.Group">    
+	select *  from role where roleId = #{roleId]}  
+</select> 
+<!-- 添加組信息 -->
+<insert  id="saveGroup"  parameterType="com.xzg.domain.Group"  flushCache="true"  statementType="PREPARED"   timeout="20">
+insert into role (roleId,roleName,roleInfo,proleId,proleName) 
+ values (
+ #{group.roleId jdbcType=VARCHAR},
+ #{group.roleName jdbcType=VARCHAR},
+ #{group.roleInfo jdbcType=VARCHAR},
+ #{group.proleId jdbcType=VARCHAR},
+ #{group.proleName jdbcType=VARCHAR}
+ )
+</insert>
+<delete  id="deleteGroupByid"  parameterType="com.xzg.domain.Group"  flushCache="true"  statementType="PREPARED"  timeout="20">
+ delete from role where roleId = #{roleId}
+  </delete>
+</mapper>

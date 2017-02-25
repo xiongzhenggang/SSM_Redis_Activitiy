@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xzg.dao.ActivitiWorkflowLogin">
+<!-- 开启本mapper的namespace下的二级缓存-->
+<cache />
+<select id="getListUser" useCache="true" resultType="com.xzg.domain.User">
+	select * from user
+</select>
+<select id="getListGroup" useCache="true" resultType="com.xzg.domain.Group">
+	select * from role
+</select>
+<select id="login"  useCache="true"  flushCache="true" resultType="java.lang.Integer">    
+	select count(*)  from User where userId = #{userId}  and password = #{password} 
+</select>
+<select id="getUserInfo"  useCache="true"  flushCache="true" resultType="com.xzg.domain.User">    
+	select *  from user where userId = #{userId}  
+</select> 
+<select id="getUserOfGroup" useCache="true"  flushCache="true" parameterType="java.lang.String" resultType="com.xzg.domain.Group">
+	select * from role where roleid in(select roleid from user_role where userId= #{userId});
+</select>
+<select id="getGroupInfo" useCache="true"  flushCache="true" parameterType="java.lang.String" resultType="com.xzg.domain.Group" >
+	select * from role where roleid=#{roleId}
+</select>
+<select id="memberOfGroup" useCache="true"  flushCache="true" parameterType="java.lang.String" resultType="com.xzg.domain.User" >
+	select * from user where userid in(select userid from user_role where roleid=#{roleId});
+</select>
+<delete id="deleteUserById">
+ 	delete from user where userId = #{userId}
+</delete>
+<delete id="deleteGroupById">
+ 	delete from role where roleId = #{roleId}
+</delete>
+<update id="updateUserByid"  parameterType="com.xzg.domain.User"  flushCache="true"  statementType="PREPARED"  timeout="20">
+	update user
+	<set>
+		<if test="userName != null">userName=#{userName},</if>
+		<if test="email != null">email=#{email}</if>
+	</set>
+	where userId = #{userId}
+</update>
+
+<update id="updateGroupByid"  parameterType="com.xzg.domain.Group"  flushCache="true"  statementType="PREPARED"  timeout="20">
+	update role
+	<set>
+		<if test="roleName != null">roleName=#{roleName},</if>
+		<if test="roleInfo != null">roleInfo=#{roleInfo},</if>
+		<if test="proleId != null">proleId=#{proleId},</if>
+		<if test="proleName != null">proleName=#{proleName}</if>
+	</set>
+	where roleId = #{roleId}
+</update>
+<select id="treeList" parameterType="com.xzg.domain.User" resultType="com.xzg.domain.Node" >
+    	select * from menue_tree where id in(
+    		select distinct actionId from authorty_role where roleid in (
+    			select roleid from user_role where userId=#{userId}
+			)
+		)
+    </select>
+</mapper>

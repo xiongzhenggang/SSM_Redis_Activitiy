@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.1.xsd">
+
+    <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+        <property name="dataSource" ref="dataSource" />
+        <property name="transactionManager" ref="transactionManager" />
+        <property name="databaseSchemaUpdate" value="true" />
+        <property name="jobExecutorActivate" value="true" />
+          <!-- 2017-01-11新增 使用qq邮箱 -->
+         <property name="mailServerHost" value="smtp.qq.com" />
+	    <property name="mailServerPort" value="465" />
+	    <property name="mailServerUsername" value="ab1290014555@qq.com"></property>
+	    <property name="mailServerPassword" value="xzg_1290014555"></property>
+	    <property name="mailServerDefaultFrom" value="ab1290014555@qq.com"></property>
+        <property name="mailServerUseSSL" value="true" />
+	<!--     <property name="jpaEntityManagerFactory" ref="entityManagerFactory" /> 需要使用下面的hibernate -->
+	    <property name="jpaHandleTransaction" value="true" />
+	    <property name="jpaCloseEntityManager" value="true" />
+         <!--  资源自动部署  -->
+   <!--   <property name="deploymentResources" value="/com/lin/workflow/*.bpmn" /> -->
+<!-- 自定义表单字段类型 ,自己的项目里加上这个类然后指向他,这里先使用activiti中自己的用户角色表 --> 
+ <!--  <property name="customFormTypes">    
+    <list>   
+     	<bean class="指向你加进去的类参照：(com.acti.UsersFormType)"  />    
+     </list>   
+ </property> 
+ <property name="customFormTypes">  
+        <list>  
+            <bean class="me.kafeitu.demo.activiti.activiti.form.UsersFormType" />  
+        </list>  
+    </property>  -->  
+    <property name="customSessionFactories">
+                 <list>
+                            <bean class="com.xzg.workFlow.util.CustomUserEntityManagerFactory"/>
+                             <bean class="com.xzg.workFlow.util.CustomGroupEntityManagerFactory"/>
+                 </list>
+       </property> 
+  </bean> 
+    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="processEngineConfiguration" />
+    </bean>
+    <bean id="repositoryService" factory-bean="processEngine"
+        factory-method="getRepositoryService" />
+    <bean id="runtimeService" factory-bean="processEngine"
+        factory-method="getRuntimeService" />
+    <bean id="taskService" factory-bean="processEngine"
+        factory-method="getTaskService" />
+    <bean id="historyService" factory-bean="processEngine"
+        factory-method="getHistoryService" />
+    <bean id="managementService" factory-bean="processEngine"
+        factory-method="getManagementService" />
+    <bean id="identityService" factory-bean="processEngine"
+        factory-method="getIdentityService" />
+     <bean id="formService " factory-bean="processEngine"
+        factory-method="getFormService" />
+      <!--   <bean id="activitiRule" class="org.activiti.engine.test.ActivitiRule"> 
+      <property name="processEngine" ref="processEngine" />
+       </bean>  -->
+       <!-- 2017-01-11新增 -->
+	<!-- <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+  		<property name="dataSource" ref="dataSource"></property>
+  		<property name="persistenceUnitName" value="spring.data.jpa.activiti"></property>
+  		<property name="persistenceXmlLocation" value="classpath:META-INF/persistence.xml"></property>
+  		<property name="jpaVendorAdapter">
+  			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+  				<property name="showSql" value="true"></property>
+  				<property name="database" value="MYSQL"></property>
+  			</bean>
+  		</property>
+  	</bean> -->
+  	
+  	<!-- 自动扫描并注入Spring Data JPA -->
+	<!-- <jpa:repositories base-package="org.activiti.web.simple.webapp.dao" 
+		entity-manager-factory-ref="entityManagerFactory" 
+		transaction-manager-ref="transactionManager">
+	</jpa:repositories>	 -->
+</beans>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">  
+<mapper  namespace="com.xzg.dao.LeaveRepository">  
+<!-- 数据库中的字段和实体类中的字段不符，使用此方式映射 -->
+ <resultMap id="BaseResultMap" type="org.activiti.web.simple.webapp.model.Leave">  
+        <id column="ID" property="id" jdbcType="INTEGER" />  
+        <result column="USER_ID" property="userId" jdbcType="VARCHAR" />  
+        <result column="START_TIME" property="startTime"  />  
+        <result column="END_TIME" property="endTime"/> 
+         <result column="APPLY_TIME" property="applyTime" />  
+         <result column="REALITY_START_TIME" property="realityStartTime"/>  
+         <result column="REALITY_END_TIME" property="realityEndTime"/>  
+         <result column="REASON" property="reason" jdbcType="VARCHAR" />  
+         <result column="LEAVE_TYPE" property="leaveType" jdbcType="VARCHAR" />  
+         <result column="PROCESS_INSTANCE_ID" property="processInstanceId" jdbcType="VARCHAR" />  
+    </resultMap>   
+    <!-- 查询单条记录 --> 
+  <select id="findOne" parameterType="java.lang.Long"  resultMap="BaseResultMap">  
+      			select * from leave_f  where ID = #{id} 
+    </select> 
+     <!-- 新增 -->   
+      <!-- keyProperty="id" useGeneratedKeys="true"  设置主键自生长orcale除外	-->
+   <insert id="save" parameterType="org.activiti.web.simple.webapp.model.Leave"
+   keyProperty="id" useGeneratedKeys="true">  
+   insert into leave_f (USER_ID,PROCESS_INSTANCE_ID, START_TIME,END_TIME, APPLY_TIME,REALITY_START_TIME,REALITY_END_TIME,REASON,LEAVE_TYPE)
+     values ( 
+      #{userId},
+      #{processInstanceId},
+      #{startTime},
+      #{endTime},
+      #{applyTime},
+      #{realityStartTime},
+      #{realityEndTime},
+      #{reason},
+      #{leaveType}
+     ) 
+   </insert>
+	<!-- 如果是orcle自生长如下 -->
+	<!--  <insert id="insert"> 
+	 <selectKey keyProperty="id" resultType="int" order="BEFORE">   
+	 <if test="_databaseId == 'oracle'">   
+	    select seq_users.nextval from dual   
+	     </if>    <if test="_databaseId == 'db2'">      
+	     select nextval for seq_users from sysibm.sysdummy1"  </if>
+	       </selectKey>  insert into users values (#{id}, #{name}) 
+	  </insert>
+-->
+</mapper>

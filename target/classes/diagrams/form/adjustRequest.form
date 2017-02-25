@@ -1,0 +1,7 @@
+<h1>Adjust vacation Request</h1> 
+<p>   Your manager has disapproved your vacation request for ${numberOfDays} days. <br/>  
+ Reason: ${managerMotivation} </p> 
+ <p>   Number of days:<br/>   
+ <input type="text" name="numberOfDays" value="${numberOfDays}" />   
+ <input type="hidden" name="numberOfDays_type" value="Integer" /> 
+ </p>

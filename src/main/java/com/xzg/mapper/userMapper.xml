@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ <mapper namespace="com.xzg.dao.UserMapper">  
+ <cache />
+<select id="getUserById"  resultType="com.xzg.domain.User">    
+	select *  from
+						 User
+	where 1=1
+            <if test="userId != 0L">
+            and userId=#{userId,jdbcType=NUMERIC}
+            </if>
+</select> 
+<!--配置一个resultMap 指定返回的类型 -->
+    <resultMap id="roleMap" type="com.xzg.domain.Group">
+         <id column="roleId" property="roleId" jdbcType="VARCHAR" />  
+        <result column="roleInfo" property="roleInfo" jdbcType="VARCHAR" />  
+        <result column="roleName" property="roleName" jdbcType="VARCHAR" />  
+        <result column="proleId" property="proleId" jdbcType="VARCHAR" />  
+         <result column="proleName" property="proleName" jdbcType="VARCHAR" />  
+    </resultMap>
+<select id="getGroupList" resultMap="roleMap"> 
+select * from  role 
+							where roleid in(
+								select roleid from user_role where userId=#{userId} 
+								)
+</select>
+<!-- 添加用戶信息 -->
+<insert  id="saveUser"  parameterType="com.xzg.domain.User"  flushCache="true"  statementType="PREPARED"   timeout="20">
+insert into user (userName,password,tel,email,address,roleId,roleName,sex,deptId,deptName,puserId,puserName) 
+ values (
+ #{user.userName},
+ #{user.password},
+ #{user.tel },
+ #{user.email},
+ #{user.address},
+ #{user.roleid},
+ #{user.roleName},
+ #{user.sex },
+ #{user.deptId},
+ #{user.deptName},
+ #{user.puserId},
+ #{user.puserName}
+ )
+</insert>
+<delete  id="deleteUserById"  parameterType="com.xzg.domain.User"  flushCache="true"  statementType="PREPARED"  timeout="20">
+ delete from user where userId = #{userId}
+  </delete>
+</mapper>

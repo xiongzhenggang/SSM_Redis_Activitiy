@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc" 
+    xmlns:aop="http://www.springframework.org/schema/aop"  
+    xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xsi:schemaLocation=" 
+    		 http://www.springframework.org/schema/mvc 
+        	http://www.springframework.org/schema/mvc/spring-mvc.xsd   
+           http://www.springframework.org/schema/beans    
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd    
+           http://www.springframework.org/schema/aop    
+           http://www.springframework.org/schema/aop/spring-aop-3.0.xsd  
+           http://www.springframework.org/schema/context    
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa-1.0.xsd">  
+     <!-- 引入jdbc配置文件 -->    
+     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+        <property name="locations">  
+            <list>  
+               <value>classpath:properties/*.properties</value>  
+                <!--要是有多个配置文件，只需在这里继续添加即可 -->  
+            </list>  
+        </property>  
+    </bean>  
+    <!-- 配置数据源 -->  
+    <bean id="dataSource"  class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+         <!--    spring自带数据原  class="org.apache.commons.dbcp.BasicDataSource"   destroy-method="close">  
+     		<property name="driverClassName" value="com.mysql.jdbc.Driver" />   
+            <property name="url" value="jdbc:mysql://localhost:3307/xzg" />   
+            <property name="username" value="xzg" />   
+            <property name="password" value="123" /> -->
+       <!-- 使用properties来配置 -->  
+        <property name="driverClassName">  
+            <value>${jdbc_driverClassName}</value>  
+        </property>  
+        <property name="url">  
+            <value>${jdbc_url}</value>  
+        </property>  
+        <property name="username">  
+            <value>${jdbc_username}</value>  
+        </property>  
+        <property name="password">  
+            <value>${jdbc_password}</value>  
+        </property>  
+        <!-- 初始化连接大小  
+        <property name="initialSize" value="${initialSize}"></property>  
+        连接池最大数量  
+        <property name="maxActive" value="${maxActive}"></property>  
+        连接池最大空闲  
+        <property name="maxIdle" value="${maxIdle}"></property>  
+        连接池最小空闲  
+        <property name="minIdle" value="${minIdle}"></property>  
+        获取连接最大等待时间  
+        <property name="maxWait" value="${maxWait}"></property>   -->
+    </bean>  
+    <!-- 启用注解 -->  
+    <context:annotation-config />  
+    <!-- 自动扫描注解的bean -->  
+    <context:component-scan base-package="com.lin.*" /> 
+     <context:component-scan base-package="com.xzg.*" />  
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->  
+    <bean id="transactionManager"  class="org.springframework.jdbc.datasource.DataSourceTransactionManager">  
+        <property name="dataSource" ref="dataSource" />  
+    </bean>
+        <import resource="applicationContext-mybatis.xml" />
+    	<import resource="applicationContext-activiti.xml" />
+   <!-- 声明组件 -->
+   <bean id="operateLogger" class="com.xzg.aop.OperateLogger"/>   
+   <aop:config >
+   	<aop:aspect ref="operateLogger">
+   		<aop:before method="log1" 
+   				pointcut="within(com.xzg.controller..*)"/>
+   	</aop:aspect>
+   </aop:config>
+   <!--  2017-01-09新增-->
+   	<context:component-scan base-package="org.activiti.web.simple.webapp">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+	<!-- Autowired用于解决bean找不到的问题，暂时不用
+	<bean id="leaveRepository" class="com.xzg.dao.LeaveRepository"/> -->
+	<!-- 开启使@Autowired -->
+<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" />  
+	
+	<!-- 开启aspectJ支持, 强制使用cglib实现动态代理 -->
+   <!--  <aop:aspectj-autoproxy proxy-target-class="true" />
+	<context:component-scan base-package="org.activiti.web.simple.webapp.service.*" />  -->
+</beans>  
