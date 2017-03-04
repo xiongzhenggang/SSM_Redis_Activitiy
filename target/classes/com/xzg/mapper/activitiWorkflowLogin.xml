@@ -56,4 +56,7 @@
 			)
 		)
     </select>
+    <select id="authorityList"  resultType="com.xzg.domain.Authority">
+    select * from authorty
+    </select>
 </mapper>

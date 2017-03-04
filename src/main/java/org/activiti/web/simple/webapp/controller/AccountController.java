@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.xzg.dao.ActivitiWorkflowLogin;
+import com.xzg.domain.Authority;
 import com.xzg.domain.Node;
 import com.xzg.listener.SessionListener;
 
@@ -228,7 +229,6 @@ public class AccountController {
     		roleId="";
     	}
 		Map<String,Object> mapout = new HashMap<String, Object>();
-		
 		com.xzg.domain.Group group = activitiWorkflowLogin.getGroupInfo(roleId);
 		mapout.put("group",group);
 		return mapout;
@@ -278,5 +278,12 @@ public List<Node> treeList(HttpServletRequest request, HttpServletResponse respo
 	List<Node> tree=activitiWorkflowLogin.treeList(user);
 	return tree;
 }
-
+@RequestMapping(value="/authority.do",method={RequestMethod.GET})
+public ModelAndView authorityList(){
+	List<Authority> authoritys = activitiWorkflowLogin.authorityList();
+	ModelAndView modelAndView=new ModelAndView();
+	modelAndView.setViewName("views/authority/authority");
+	modelAndView.addObject("authoritys", authoritys);
+	return modelAndView;
+}
 }

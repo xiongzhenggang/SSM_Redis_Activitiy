@@ -18,19 +18,18 @@
 		<tr>
 			<th>权限编号</th>
 			<th>权限名称</th>
-			<th>操作</th>
+			<th>url</th>
 		</tr>
 	</thead>
-	<c:forEach var="group" items="${listgroup}">
+	<c:forEach var="authority" items="${authoritys}">
 		<tr align="center">
-			<td>${group.roleId }</td>
-			<td>${group.roleInfo }</td>
-			<td>${group.roleName }</td>
+			<td>${authority.actionId }</td>
+			<td>${authority.actionName }</td>
+			<td>${authority.url }</td>
 			<td>
 			<!-- 在使用a标签使用onclick调用函数的时候，传递的参数需要定义类型（number不做处理，string需要‘引号’）所以这里加上单引号处理 -->
-			<a href="#" onclick="showUpdate('${group.roleId}')"   target="main" >修改</a>
-				<a href="${ctx}/deleteGroupById/${group.roleId}.do" target="main">删除</a>
-				<a href="${ctx }/memberofgroup/${group.roleId}.do" target="main">查看该组的用户</a>
+			<a href="#" onclick="showUpdate('${authority.actionId}')"   target="main" >修改</a>
+				<a href="${ctx}/deleteGroupById/${authority.actionId}.do" target="main">删除</a>
 			</td>
 		</tr>
 	</c:forEach>
@@ -48,7 +47,7 @@ $(function() {
 });
 function showUpdate(obj){
     	var id = obj ;
-    	var url ='${ctx}/showUpdateGroupById.do';
+    	var url ='${ctx}/showUpdateAuthorityById.do';
     	$.ajax({
     		type:"POST",       
     		url:url,  /* 这里就是action名+要执行的action中的函数 */
@@ -60,14 +59,12 @@ function showUpdate(obj){
     			if(data != null){
     				$("#tab").hide();
     			}
-    		var result="<form action='${ctx }/updateGroupById.do'  method='post'>";
-    		result+="角色编号：<input id='roleId' name='roleId'  type='text' readonly='true' value='"+nullToString(data.group.roleId)+"' /><br/>";
-    		result+="角  色  名：<input id='roleName' name ='roleName'  type='text' value='"+nullToString(data.group.roleName)+"' /><br/>";
-    		result+="角色详情：<input id='roleName' name ='roleInfo'  type='text' value='"+nullToString(data.group.roleInfo)+"' /><br/>";
-    		result+="父角色编号：<input id='proleId' name ='proleId'  type='text' value='"+nullToString(data.group.proleId)+"' /><br/>";
-    		result+="父角色名：<input id='proleName' name ='proleName'  type='text' value='"+nullToString(data.group.proleName)+"' /><br/>";
+    		var result="<form action='${ctx }/updateAuthorityById.do'  method='post'>";
+    		result+="权限编号：<input id='roleId' name='roleId'  type='text' readonly='true' value='"+nullToString(data.authority.actionId)+"' /><br/>";
+    		result+="权限名称：<input id='roleName' name ='roleName'  type='text' value='"+nullToString(data.authority.actionName)+"' /><br/>";
+    		result+="动作地址：<input id='roleName' name ='roleInfo'  type='text' value='"+nullToString(data.authority.url)+"' /><br/>";
     		result+='<br/><input type="submit" id="update"  value="确定修改"/></form>';
-    		 $("#showUpdateGroup").append(result);
+    		 $("#showUpdateAuthority").append(result);
     			}
     		});
 }

@@ -44,7 +44,6 @@ $(function() {
 	$("#update").click(function(){
 		$("#fm").hide();
 		$("#tab").show();
-		
 		});
 });
 function showUpdate(obj){

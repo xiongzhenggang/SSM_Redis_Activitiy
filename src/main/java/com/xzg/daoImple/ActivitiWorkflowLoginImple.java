@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.xzg.dao.ActivitiWorkflowLogin;
+import com.xzg.domain.Authority;
 import com.xzg.domain.Group;
 import com.xzg.domain.Node;
 import com.xzg.domain.User;
@@ -33,20 +34,12 @@ public class ActivitiWorkflowLoginImple implements ActivitiWorkflowLogin {
 		int result = activitiWorkflowLogin.login(userId, password);
 		return result;
 	}
-
-	/* (non-Javadoc)
-	 * @see com.lin.dao.ActivitiWorkflowLogin#getUserInfo(java.lang.String)
-	 */
 	@Transactional
 	public User getUserInfo(String userid) {
 		// TODO Auto-generated method stub
 		User user = activitiWorkflowLogin.getUserInfo(userid);
 		return user;
 	}
-
-	/* (non-Javadoc)
-	 * @see com.lin.dao.ActivitiWorkflowLogin#getUserOfGroup(java.lang.String)
-	 */
 	@Transactional
 	public List<Group> getUserOfGroup(String userid) {
 		// TODO Auto-generated method stub
@@ -54,9 +47,6 @@ public class ActivitiWorkflowLoginImple implements ActivitiWorkflowLogin {
 		return lg;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.lin.dao.ActivitiWorkflowLogin#getGroupInfo(java.lang.String)
-	 */
 	@Transactional
 	public Group getGroupInfo(String groupId) {
 		// TODO Auto-generated method stub
@@ -96,15 +86,18 @@ public class ActivitiWorkflowLoginImple implements ActivitiWorkflowLogin {
 	public void updateUserByid(User user){
 		activitiWorkflowLogin.updateUserByid(user);
 	}
-
 	@Transactional
 	public void updateGroupByid(Group group){
 		activitiWorkflowLogin.updateGroupByid(group);
 	}
-	
 	@Transactional
 	public List<Node> treeList(User user){
 		List<Node> tree =	activitiWorkflowLogin.treeList(user);
 		return tree;
+	}
+	@Transactional
+	public List<Authority> authorityList(){
+		List<Authority> list = activitiWorkflowLogin.authorityList();
+		return list;
 	}
 }

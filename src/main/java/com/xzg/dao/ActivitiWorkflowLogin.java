@@ -5,8 +5,11 @@ package com.xzg.dao;
 
 import java.util.List;
 
+import net.sf.ehcache.store.AuthoritativeTier;
+
 import org.apache.ibatis.annotations.Param;
 
+import com.xzg.domain.Authority;
 import com.xzg.domain.Group;
 import com.xzg.domain.Node;
 import com.xzg.domain.User;
@@ -59,6 +62,8 @@ public void updateGroupByid(Group group);
 
 //z_tree树形结构展示角色和权限
 public List<Node> treeList(User user);
+//所有权限展示
+public List<Authority> authorityList();
 }
 
 
