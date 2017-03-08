@@ -10,7 +10,7 @@
 <script src="${ctx }/js/jquery-1.7.1.js" type="text/javascript"></script>
 </head>
 <body>
-<h1>组管理</h1>
+<h1>权限管理</h1>
 <h3>${message }</h3>
 <div id="showUpdateAuthority">
 <table border="1"  id="tab" style="border-collapse: collapse;border-style:solid;" width="100%">
@@ -60,9 +60,9 @@ function showUpdate(obj){
     				$("#tab").hide();
     			}
     		var result="<form action='${ctx }/updateAuthorityById.do'  method='post'>";
-    		result+="权限编号：<input id='roleId' name='roleId'  type='text' readonly='true' value='"+nullToString(data.authority.actionId)+"' /><br/>";
-    		result+="权限名称：<input id='roleName' name ='roleName'  type='text' value='"+nullToString(data.authority.actionName)+"' /><br/>";
-    		result+="动作地址：<input id='roleName' name ='roleInfo'  type='text' value='"+nullToString(data.authority.url)+"' /><br/>";
+    		result+="权限编号：<input id='actionId' name='actionId'  type='text' readonly='true' value='"+nullToString(data.authority.actionId)+"' /><br/>";
+    		result+="权限名称：<input id='actionName' name ='actionName'  type='text' value='"+nullToString(data.authority.actionName)+"' /><br/>";
+    		result+="动作地址：<input id='url' name ='url'  type='text' value='"+nullToString(data.authority.url)+"' /><br/>";
     		result+='<br/><input type="submit" id="update"  value="确定修改"/></form>';
     		 $("#showUpdateAuthority").append(result);
     			}

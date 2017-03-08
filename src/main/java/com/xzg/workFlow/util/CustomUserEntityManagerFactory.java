@@ -26,9 +26,6 @@ public class CustomUserEntityManagerFactory implements SessionFactory {
 		// TODO Auto-generated method stub
 		return UserIdentityManager.class;
 	}
-	/* (non-Javadoc)
-	 * @see org.activiti.engine.impl.interceptor.SessionFactory#openSession()
-	 */
 	public Session openSession() {
 		// TODO Auto-generated method stub
 		return customUserEntityManager;

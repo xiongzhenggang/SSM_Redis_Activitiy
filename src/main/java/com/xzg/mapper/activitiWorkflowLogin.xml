@@ -59,4 +59,15 @@
     <select id="authorityList"  resultType="com.xzg.domain.Authority">
     select * from authorty
     </select>
+    <update id="updateAuthorityById" parameterType="com.xzg.domain.Authority">
+    update authorty
+    <set>
+		<if test="actionName != null">actionName=#{actionName},</if>
+		<if test="url != null">url=#{url}</if>
+	</set>
+	where actionId = #{actionId}
+    </update>
+     <select id="selectAuthorityById"  resultType="com.xzg.domain.Authority">
+    select * from authorty  where  actionId = #{authorityId}
+    </select>
 </mapper>

@@ -64,6 +64,10 @@ public void updateGroupByid(Group group);
 public List<Node> treeList(User user);
 //所有权限展示
 public List<Authority> authorityList();
+//修改功能
+public void updateAuthorityById(Authority authority);
+//根据actiongId查询
+public Authority selectAuthorityById(String authorityId);
 }
 
 

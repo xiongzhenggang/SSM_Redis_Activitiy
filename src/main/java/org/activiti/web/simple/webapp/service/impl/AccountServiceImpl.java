@@ -67,6 +67,8 @@ public class AccountServiceImpl implements AccountService {
 	public boolean checkPassword(String userid, String password) {
 		boolean bl = false;
 				try {
+					//此处将使用md5加密
+					
 			int isexist = activitiWorkflowLogin.login(userid, password);
 			if(isexist>0)
 				bl = true;

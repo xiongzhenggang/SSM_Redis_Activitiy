@@ -16,7 +16,6 @@ import org.activiti.engine.impl.persistence.entity.GroupIdentityManager;
  */
 //组管理工厂类
 public class CustomGroupEntityManagerFactory implements SessionFactory {
-	// private GroupEntityManager groupEntityManager;
 	@Resource
 	private CustomGroupEntityManager customGroupEntityManager; 
 	/*@Autowired
@@ -27,9 +26,6 @@ public class CustomGroupEntityManagerFactory implements SessionFactory {
 		// TODO Auto-generated method stub
 		return GroupIdentityManager.class;
 	}
-	/* (non-Javadoc)
-	 * @see org.activiti.engine.impl.interceptor.SessionFactory#openSession()
-	 */
 	public Session openSession() {
 		// TODO Auto-generated method stub
 		return customGroupEntityManager;

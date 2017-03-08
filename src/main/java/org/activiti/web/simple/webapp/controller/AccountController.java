@@ -1,5 +1,8 @@
 package org.activiti.web.simple.webapp.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import org.activiti.engine.IdentityService;
 import org.activiti.web.simple.webapp.service.AccountService;
 import org.activiti.web.simple.webapp.service.ActivitiWorkFlowService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +35,8 @@ import com.xzg.listener.SessionListener;
 
 @Controller
 public class AccountController {
+	//日志信息
+		protected Logger logger = LoggerFactory.getLogger(getClass());
 	@Resource
 	private IdentityService identityService;
 	@Resource(name="accountServiceImpl")
@@ -46,6 +53,7 @@ public class AccountController {
 	 * 跳转到登录页面
 	 * @return
 	 */
+	//spring核心过滤器，为返回的字符串添加.jsp
 	@RequestMapping(value="/login.do",method={RequestMethod.GET,RequestMethod.GET})
 	public String login(){
 		return "views/login";
@@ -286,4 +294,50 @@ public ModelAndView authorityList(){
 	modelAndView.addObject("authoritys", authoritys);
 	return modelAndView;
 }
+@RequestMapping(value="updateAuthorityById.do",method={RequestMethod.POST})
+public String updateAuthorityById(Authority authority,RedirectAttributes redirectAttributes){
+	String msg="";
+	try{
+		activitiWorkflowLogin.updateAuthorityById(authority);
+		msg="修改成功！";
+	}catch(Exception e){
+		msg="修改失败！";
+	}
+	redirectAttributes.addFlashAttribute("message", msg);
+	return "redirect:/authority.do"; 
+}
+@RequestMapping(value="/showUpdateAuthorityById.do",method={RequestMethod.POST,RequestMethod.GET})
+@ResponseBody
+public Map<String,Object> showUpdateAuthorityById(@RequestBody  Map<String, String> map){
+	String authorityId;
+	if(map.containsKey("id")){
+		authorityId=map.get("id");
+	}else{
+		authorityId="";
+	}
+	Map<String,Object> mapout = new HashMap<String, Object>();
+	Authority authority = activitiWorkflowLogin.selectAuthorityById(authorityId);
+	mapout.put("authority",authority);
+	return mapout;
+}
+/**利用MD5进行加密
+ * @param str  待加密的字符串
+ * @return  加密后的字符串
+ * @throws NoSuchAlgorithmException  没有这种产生消息摘要的算法
+ * @throws UnsupportedEncodingException  
+ */
+public String EncoderByMd5(String str) throws NoSuchAlgorithmException, UnsupportedEncodingException{
+	String newStr="";
+	try {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] md5 = md.digest(str.getBytes());
+        newStr=md5.toString();
+    } catch (Exception e) {
+    	logger.error("加密失败！");
+        throw new RuntimeException(e);
+        
+    }
+    //加密后的字符串
+	return newStr;
+	}
 }

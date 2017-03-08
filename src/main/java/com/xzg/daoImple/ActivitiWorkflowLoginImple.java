@@ -100,4 +100,14 @@ public class ActivitiWorkflowLoginImple implements ActivitiWorkflowLogin {
 		List<Authority> list = activitiWorkflowLogin.authorityList();
 		return list;
 	}
+	@Transactional
+	public void updateAuthorityById(Authority authority){
+		activitiWorkflowLogin.updateAuthorityById(authority);
+	}
+	
+	public Authority selectAuthorityById(String authorityId){
+			Authority authority = activitiWorkflowLogin.selectAuthorityById(authorityId);
+			return authority;
+		
+	}
 }
