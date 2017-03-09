@@ -27,11 +27,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.security.crypto.codec.Base64;
 
 import com.xzg.dao.ActivitiWorkflowLogin;
 import com.xzg.domain.Authority;
 import com.xzg.domain.Node;
+import com.xzg.domain.User;
 import com.xzg.listener.SessionListener;
+import com.xzg.publicUtil.CookieUtil;
 
 @Controller
 public class AccountController {
@@ -58,6 +61,84 @@ public class AccountController {
 	public String login(){
 		return "views/login";
 	}
+	/**
+	 * 跳转到登录页面
+	 * @return
+	 */
+	//spring核心过滤器，为返回的字符串添加.jsp
+	@RequestMapping(value="/loginAuto.do",method={RequestMethod.GET,RequestMethod.GET})
+	public String login(HttpServletRequest request,RedirectAttributes redirectAttributes){
+		String forword="";
+		String userId="";//等同于前台的username
+		String password="";
+		boolean isLogin = false;
+		User user;
+		//使用cookie自动登录
+		String cookieValue=CookieUtil.getUid(request, "cn.xzg");
+		if(cookieValue!=null){
+			//base64解密
+			String cookiedeBase64=new String(Base64.decode(cookieValue.getBytes()));
+			//通过：来拆分存到string数组中
+			String[] cookieArry = cookiedeBase64.split(":");
+			//拆分后的值
+			/* cookieArry[0] ---- 用户名 cookieArry[1] ---- cookie有效时间 cookieArry[2] ---- MD5明文字符串*/
+			if(cookieArry.length!=3){
+				isLogin=false;
+				}else{
+					long effictTime = Long.valueOf(cookieArry[1]);
+					userId= cookieArry[0];
+					String	cookieMd5Cli=cookieArry[2];
+						if(effictTime<System.currentTimeMillis()){
+							isLogin=false;
+							logger.debug("======cookie有效时间过期！===========");
+						}else{
+							user = activitiWorkflowLogin.getUserInfo(userId);
+							if(user!=null){
+								password=user.getPassword();
+								String cookieMd5Ser = CookieUtil.getMD5(userId+password+CookieUtil.webKey);
+								//
+								if(cookieMd5Cli.equals(cookieMd5Ser)){
+									//验证成功自动登录
+									isLogin=true;
+									logger.debug("==============cookie可以自动登录！=========");
+								}else{
+									//用户信息不匹配阻止登录
+									isLogin=false;
+									logger.debug("用户信息和数据库中不符！");
+								}
+							}
+					}
+				}
+		}
+//要根据判断结果来确定是否登录
+		if(isLogin){
+			user=activitiWorkflowLogin.getUserInfo(userId);
+			List<com.xzg.domain.Group> listGroup  = activitiWorkflowLogin.getUserOfGroup(userId);
+			request.getSession().setAttribute("loginuser", user);
+			request.getSession().setAttribute("listGroup", listGroup);
+			//listener加入session的属性中：开始监听
+			SessionListener sessionListener = new SessionListener(request.getServletContext());
+			//获取sessionId保存到全局变量application中
+			 ServletContext application = request.getServletContext();
+			 //获取保运的用户id
+			 String appId = (String) application.getAttribute("userid");
+			 //先判断session会话是否已存在全局变量中
+			if(userId.equals(appId)){
+				redirectAttributes.addFlashAttribute("message", "您已登录，请不要重复登录!");
+				forword="/login.do";//login.jsp
+			}else{
+					application.setAttribute("userid", userId);
+				 	request.getSession().setAttribute("sessionListener", sessionListener);
+					redirectAttributes.addFlashAttribute("message", "登录成功!");
+					forword="/main.do";//main.jsp
+			}
+		}else{
+			redirectAttributes.addFlashAttribute("message", "用户名或密码错误!");
+			//登录失败，在login_tmp表中更新字段num-1直到为0时锁定用户（5分钟内）当锁定用户时禁止登录
+			forword="/login.do";//login.jsp
+		}
+	return "redirect:"+forword;
+		}
 	/**
 	 * 退出
 	 * @return
@@ -91,6 +172,7 @@ public class AccountController {
 	public String loginin(@RequestParam("username")String userid,@RequestParam("password")String password,HttpServletRequest request, HttpServletResponse response,RedirectAttributes redirectAttributes){
 		String forword="";
 		if((userid!=null&&userid.length()>0)&&(password!=null&&password.length()>0)){
+			password=CookieUtil.getMD5(password);//加密用户密码
 			boolean b = accountService.checkPassword(userid, password);
 			if(b){
 			com.xzg.domain.User	user = activitiWorkflowLogin.getUserInfo(userid);
@@ -319,6 +401,19 @@ public Map<String,Object> showUpdateAuthorityById(@RequestBody  Map<String, Stri
 	Authority authority = activitiWorkflowLogin.selectAuthorityById(authorityId);
 	mapout.put("authority",authority);
 	return mapout;
+}
+//保存cookie自动登录
+@RequestMapping(value="/saveCookie.do",method={RequestMethod.POST,RequestMethod.GET})
+@ResponseBody
+public void saveCookie(@RequestBody  Map<String, String> map,HttpServletRequest request, HttpServletResponse response){
+	if(map.containsKey("username")&&map.containsKey("password")){
+	String	username=map.get("username");
+	String	password = map.get("password");
+	//保存
+	CookieUtil.saveCookie(username, password,response);
+	}else{
+		logger.error("未获取到用户姓名和密码！");
+	}
 }
 /**利用MD5进行加密
  * @param str  待加密的字符串

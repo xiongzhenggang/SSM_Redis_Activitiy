@@ -4,36 +4,34 @@
 package com.xzg.publicUtil;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.crypto.codec.Base64;
-import com.xzg.domain.User;
 /**
- * @author hasee
+ * @author xzg
  * @TIME 2017年3月8日
  * 注意类的隐藏和实例创建
  */
 public class CookieUtil {
        //保存cookie时的cookieName
-       private final static String cookieDomainName = "cn.itcast";
+       private final static String cookieDomainName = "cn.xzg";
       
        //加密cookie时的网站自定码
-       private final static String webKey = "itcast";
+       public  final static String webKey = "myinfo";
       
-//设置cookie有效期是两个星期，根据需要自定义
-       private final static long cookieMaxAge = 60 * 60 * 24 * 7 * 2;        
-
-       public static void saveCookie(User user, HttpServletResponse response) {
-             
+//设置cookie有效期是一小时，根据需要自定义
+       private final static long cookieMaxAge = 60 * 5  ;//测试5分钟        
+       public static void saveCookie(String username,String password, HttpServletResponse response) {
               //cookie的有效期
               long validTime = System.currentTimeMillis() + (cookieMaxAge * 1000);
               //MD5加密用户详细信息
-              String cookieValueWithMd5 =getMD5(user.getUserName() + ":" + user.getPassword()
-                            + ":" + validTime + ":" + webKey);
+              //首先将用户密码进行MD5加密得到加密后的用户密码
+              String passwordMd5=getMD5(password);
+              //形成MD5明文
+              String cookieValueWithMd5 =getMD5(username +passwordMd5+webKey);
               //将要被保存的完整的Cookie值
-              String cookieValue = user.getUserName() + ":" + validTime + ":" + cookieValueWithMd5;
+              String cookieValue = username + ":" + validTime + ":" + cookieValueWithMd5;
               //再一次对Cookie的值进行BASE64编码 Base64.encodeBase64(src.getBytes());
               String cookieValueBase64 = new String(Base64.encode(cookieValue.getBytes()));
               //开始保存Cookie
@@ -49,7 +47,7 @@ public class CookieUtil {
 	 * @param string
 	 * @return
 	 */
-	private static String getMD5(String string) {
+	public static String getMD5(String string) {
 		// TODO Auto-generated method stub
 		 //确定计算方法
 	    try { 
@@ -82,11 +80,11 @@ public class CookieUtil {
 	    }
 	
 	 /**
-	32      * 删除cookie
-	33      * 
-	34      * @param response
-	35      * @param name
-	36      */
+	      * 删除cookie
+	      * 
+	      * @param response
+	      * @param name
+	     */
 	  public static void removeCookie(HttpServletResponse response, String name) {
 	         Cookie uid = new Cookie(name, null);
 	         uid.setPath("/");
