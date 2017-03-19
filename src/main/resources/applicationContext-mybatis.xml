@@ -20,5 +20,38 @@
      	  <!--  20170115增加，mybitis扫描接口包，用于实现方法--> 
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>  
     </bean> 
+     <!-- Redis和缓存配置开始 -->  
+             <!-- jedis 配置 -->  
+             <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig" >  
+                   <property name="maxIdle" value="100" />  
+                   <property name="maxWaitMillis" value="1000" />  
+                   <property name="testOnBorrow" value="true" />  
+             </bean >  
+            
+             <!-- redis连接池 -->
+
+                 <bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="close">
+                     <constructor-arg name="poolConfig" ref="poolConfig"/>
+                     <constructor-arg name="host" value="127.0.0.1"/>
+                     <constructor-arg name="port" value="6379"/>
+                 </bean>
+
+               <!-- redis服务器中心 -->  
+           <bean id="connectionFactory"  class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" >  
+                   <property name="poolConfig" ref="poolConfig" />  
+                   <property name="port" value="6379" />  
+                  <property name="hostName" value="127.0.0.1" />  
+                   <!-- <property name="password" value="${redis.password}" /> --> 
+                  <property name="timeout" value="10000" ></property>  
+             </bean >  
+             <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" >  
+                   <property name="connectionFactory" ref="connectionFactory" />  
+                   <property name="keySerializer" >  
+                      <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />  
+                   </property>  
+                   <property name="valueSerializer" >  
+                       <bean class="org.springframework.data.redis.serializer.StringRedisSerializer" />  
+                   </property>  
+            </bean > 
     <import resource="applicationContext-ehcache.xml" />
 </beans>

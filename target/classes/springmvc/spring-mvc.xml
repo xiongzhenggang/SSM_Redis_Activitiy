@@ -12,6 +12,7 @@
     http://www.springframework.org/schema/mvc  
     http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">  
        
+        <aop:aspectj-autoproxy proxy-target-class="true"/>
     <!-- 扫描controller（controller层注入）下面的或者子包下面的class，扫描如果有
 @Component,@Controller,@Respotory,@Service这些注解的类，然后注册为java bean容器中的bean -->  
    <context:component-scan base-package="com.xzg.controller"/>    

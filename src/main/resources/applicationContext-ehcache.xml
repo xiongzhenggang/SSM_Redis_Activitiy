@@ -27,4 +27,16 @@ xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.sprin
         <property name="configLocation" value="classpath:ehcache.xml"/>
          <property name="shared" value="true"/>
     </bean>
+    
+     <!-- cache配置 -->  
+             <!-- <bean id="putCache" class="com.spring_redis.cache.PutCacheAOP" >  
+                   <property name="redisTemplate" ref="redisTemplate" />
+             </bean>  --> 
+             
+             <!-- cache配置 -->  
+              <bean id="getCache" class="com.spring_redis.cache.GetCacheAOP" >  
+                    <property name="redisTemplate" ref="redisTemplate" />
+              </bean>  
+              
+              <!-- Redis和缓存配置结束 -->
 </beans>
