@@ -3,7 +3,7 @@
  */
 package com.xzg.cache;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
 import com.xzg.publicUtil.SerializeUtil;
 
@@ -17,7 +17,7 @@ import redis.clients.jedis.JedisPool;
  */
 public class RedisCache {
     
-    @Autowired
+    @Resource(name="jedisPool")
     private JedisPool jedisPool;
     //从redis缓存中查询，反序列化
     public Object getDataFromRedis(String redisKey){
@@ -29,11 +29,9 @@ public class RedisCache {
         if(null == result){
             return null;
         }
-        
         //查询到了，反序列化
         return SerializeUtil.unSerialize(result);
     }
-    
     //将数据库中查询到的数据放入redis
     public void setDataToRedis(String redisKey, Object obj){
         

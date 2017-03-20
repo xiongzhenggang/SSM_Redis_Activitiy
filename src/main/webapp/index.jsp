@@ -51,7 +51,7 @@ $(document).ready(function(){
                          <!-- <div class="submit">
                                 <input type="button" id="reg01"  class="button_submit" value="展示员工信息"/>
                            </div> -->
-                           <a  id= ""  href="user/selectByPrimaryKey.do">测试Aop—redis缓存</a> <!-- 访问web-inf下的资源无法直接访问，通过servlet转发 -->
+                           <a  id= ""  href="user/selectByPrimaryKey.do?userId=10005">测试Aop—redis缓存</a> <!-- 访问web-inf下的资源无法直接访问，通过servlet转发 -->
                            <a  id= "login"  href="loginAuto.do">工作流登录入口</a>
 </div>
 <script>

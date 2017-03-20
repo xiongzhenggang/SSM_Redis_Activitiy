@@ -32,7 +32,7 @@
 
                  <bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="close">
                      <constructor-arg name="poolConfig" ref="poolConfig"/>
-                     <constructor-arg name="host" value="127.0.0.1"/>
+                     <constructor-arg name="host" value="192.168.106.128"/>
                      <constructor-arg name="port" value="6379"/>
                  </bean>
 
@@ -40,7 +40,7 @@
            <bean id="connectionFactory"  class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" >  
                    <property name="poolConfig" ref="poolConfig" />  
                    <property name="port" value="6379" />  
-                  <property name="hostName" value="127.0.0.1" />  
+                  <property name="hostName" value="192.168.106.128" />  
                    <!-- <property name="password" value="${redis.password}" /> --> 
                   <property name="timeout" value="10000" ></property>  
              </bean >  

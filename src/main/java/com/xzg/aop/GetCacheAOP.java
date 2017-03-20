@@ -8,7 +8,9 @@ import java.lang.reflect.Method;
 
 
 
-import org.aspectj.lang.JoinPoint;
+
+import javax.annotation.Resource;
+
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,11 +29,9 @@ public class GetCacheAOP  {
       
     @Autowired
     private RedisTemplate<Serializable, Object> redisTemplate;
-    
-    private RedisCache redisCache = new RedisCache();
-  
-      
-    @Pointcut("@annotation(com.spring_redis.cache.GetCache)")  
+    @Resource(name="redisCache")
+    private RedisCache redisCache;
+    @Pointcut("@annotation(com.xzg.cache.GetCache)")  
     public void getCache(){
         System.out.println("我是一个切入点");  
     }  
@@ -80,7 +80,6 @@ public class GetCacheAOP  {
         //将查询到的数据返回
         return object;
     }
-    
     /**
      * 根据类名、方法名和参数值获取唯一的缓存键
      * @return 格式为 "包名.类名.方法名.参数类型.参数值"，类似 "your.package.SomeService.getById(int).123"
@@ -100,14 +99,11 @@ public class GetCacheAOP  {
         if (args != null && args.length > 0) {
             id = String.valueOf(args[0]);
         }
-        
         ActionName += "="+id;
         String redisKey = ms+"."+ActionName;
         System.out.println("当前方法的key值=="+redisKey);
         return redisKey;
     }
-    
-    
     public void setRedisTemplate(  
             RedisTemplate<Serializable, Object> redisTemplate) {  
         this.redisTemplate = redisTemplate;  
