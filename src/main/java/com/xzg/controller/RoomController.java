@@ -21,7 +21,7 @@ import com.xzg.cache.GetCache;
 @Controller
 @RequestMapping("user")
 public class RoomController {
-    @Resource(name="")
+    @Resource(name="roomServiceImple")
     private RoomService  roomService;
     
     @GetCache(name="user",value="id")
