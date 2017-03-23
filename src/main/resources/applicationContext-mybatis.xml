@@ -23,13 +23,11 @@
      <!-- Redis和缓存配置开始 -->  
              <!-- jedis 配置 -->  
              <bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig" >  
-                   <property name="maxIdle" value="100" />  
-                   <property name="maxWaitMillis" value="1000" />  
+                   <property name="maxIdle" value="100" /> 
+                   <property name="maxWaitMillis" value="-1" />  
                    <property name="testOnBorrow" value="true" />  
              </bean >  
-            
              <!-- redis连接池 -->
-
                  <bean id="jedisPool" class="redis.clients.jedis.JedisPool" destroy-method="close">
                      <constructor-arg name="poolConfig" ref="poolConfig"/>
                      <constructor-arg name="host" value="192.168.106.128"/>

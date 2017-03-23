@@ -30,9 +30,9 @@ xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.sprin
     
     <bean id="redisCache" class="com.xzg.cache.RedisCache"/>  
      <!-- cache配置 -->  
-             <!-- <bean id="putCache" class="com.spring_redis.cache.PutCacheAOP" >  
-                   <property name="redisTemplate" ref="redisTemplate" />
-             </bean>  --> 
+              <bean id="putCache" class="com.xzg.aop.PutCacheAOP" > 
+                   <!-- <property name="redisTemplate" ref="redisTemplate" /> -->
+             </bean>  
              
              <!-- cache配置 -->  
               <bean id="getCache" class="com.xzg.aop.GetCacheAOP" >  
