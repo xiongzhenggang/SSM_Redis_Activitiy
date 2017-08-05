@@ -20,8 +20,8 @@
          <input name="submit" id="submit" type="submit" value="登录"/>
    </form>
    ```
- 2. 使用ajax
-```html
+2. 使用ajax
+```
 var url ='${ctx}/saveCookie.do';<br />
 	   var username= $("input[id='username']").val();
 	   var password= $("input[id='password']").val();
@@ -37,9 +37,9 @@ var url ='${ctx}/saveCookie.do';<br />
     		dataType : "json",
     		success:function(data)
 ```
-同样接受数据对应的两种方式：
-    1. el表达式
-```jsp
+* 同样接受数据对应的两种方式
+1. el表达式
+```
     <c:forEach var="user" items="${listuser }">
 		<tr align="center">
 			<td>${user.userId }</td>
@@ -52,10 +52,10 @@ var url ='${ctx}/saveCookie.do';<br />
 			</td>
 		</tr>
 	</c:forEach>
-    ```
+ ```
 2. ajax的回调函数（json格式）
-  这里就需要要求controller返回值为json格式的数据了
- ```html
+这里就需要要求controller返回值为json格式的数据了
+ ```
 		$.ajax({
     		type:"POST",       
     		url:url,  /* 这里就是action名+要执行的action中的函数 */
@@ -75,7 +75,7 @@ var url ='${ctx}/saveCookie.do';<br />
     		 $("#showUpdateAuthority").append(result);
     			}
     		});
- ```
+```
 ### 接下来就是后台的springmvc的controller接受数据和返回数据的方式（注意注解的意义）
  从视图层接收数据
  1. 从普通form表单传递的数据处理
@@ -91,7 +91,7 @@ public String loginin(@RequestParam("username")String userid,@RequestParam("pass
 	public ModelAndView memberOfGroup(@PathVariable("groupId")String groupId)
   ```
 	 其中{groupId}.do应该对应前台的action地址
-```jsp
+```
 	 <a href="${ctx }/memberofgroup/${group.roleId}.do" target="main">查看该组的用户</a>
 ```
 对应方可获取数据。当然记得在方法中使用@PathVariable注解。
