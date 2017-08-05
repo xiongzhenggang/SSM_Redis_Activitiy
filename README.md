@@ -11,7 +11,7 @@
  其二：本练习使用的工作流框架为activiti，通过覆盖原有的api设计自定义的用户角色信息。流程为请假流程
  其三：登陆上设计单点登录和本地cookie自动的登录
  ## ssm主要技术实现方式：
-* 视图使用jsp技术，传递数据到控制层有两种方式如下：======================
+* 视图使用jsp技术，传递数据到控制层有两种方式如下：
  1. 普通的form表单提交
   ```html
   <form action="${ctx }/loginin.do" method="post">
@@ -96,12 +96,14 @@ public String loginin(@RequestParam("username")String userid,@RequestParam("pass
 ```
 对应方可获取数据。当然记得在方法中使用@PathVariable注解。
  * 方式3、springmvc也会将form表单中的数据封装成对象类似struts2的方式
+ 
 ```java
 	 @RequestMapping( "/updateUser.do")
 public ModelAndView showUdateUser(User user)如同与方式1类似
 ```
 2. 从ajax获取的json数据 关键注解@ResponseBody//在springMVC中提供了JSON响应的支持
 * 方式1
+
  ```java
 	 @RequestMapping(value="/showUpdateAuthorityById.do",method={RequestMethod.POST,RequestMethod.GET})
 @ResponseBody
@@ -116,7 +118,7 @@ String authorityId;
   ### 其中map用于节后前台传递的json数据，当然也可以使用list、set等集合接收。
   controller返回视图或数据：
   * 方式1、ModelAndView返回渲染后的视图包括数据
-  ```
+```java
 List<Authority> authoritys = activitiWorkflowLogin.authorityList();
 	ModelAndView modelAndView=new ModelAndView();
 	modelAndView.setViewName("views/authority/authority");
@@ -143,9 +145,9 @@ List<Authority> authoritys = activitiWorkflowLogin.authorityList();
 	}
 ```
  从视图层获取ajax异步传递json数据然后返回json数据的方法如上方法。在ajax成功后直接调用	
-	```xml
+```xml
 	result+='用户邮箱：<input id="email"  name="email" type="text" value="'+ data.user.email+'"/>' ;
-	 ```
+```
 即可
  * 方法3、则是重定向（应与转发区别）
  以下是两者之间的区别和处理过程。
@@ -160,32 +162,32 @@ List<Authority> authoritys = activitiWorkflowLogin.authorityList();
 
 
 * 重定向的方法就是在controler方法返回string类型的地址，那么在pringmvc的配置文件会加上后缀和前缀配置的xml如下：
-		 ```xml
+ ```xml
 <!-- 对模型视图添加前后缀 -->  
      <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"  
       p:prefix="/WEB-INF/" 
       p:suffix=".jsp"/>
-	      ```
+ ```
   以下是使用的具体事例方法：
   1. 字符串代表逻辑视图名，注意这里不是重定向！
-	      ```java
+ ```java
   @RequestMapping(value="/login.do",method={RequestMethod.GET,RequestMethod.GET})
 	public String login(){
 		return "views/login";
 	}
-	 ```
+ ```
   2. 以上也可以携带数据
-		 ```java
+ ```java
    @RequestMapping(value="/login.do",method={RequestMethod.GET,RequestMethod.GET})
    public String login(Model model){
 model.addAttribute(attrName,attrValue);//相当于ModelAndView的addObject方法
 return "views/login";
    }
-	 ```
+```
   3. 需要使用redirect重定向
   redirect的特点和servlet一样，使用redirect进行重定向那么地址栏中的URL会发生变化，同时不会携带上一次的request。不过可以使用redirectAttributes来
   携带数据。具体使用方法如下：
-		 ```
+```java
   @RequestMapping(value="/{Id}/deleteUserById.do" ,method={RequestMethod.POST,RequestMethod.GET})
 	public  String deleteUserById(@PathVariable("Id") String userId,RedirectAttributes redirectAttributes){
 		String message="";
@@ -198,13 +200,14 @@ return "views/login";
 		redirectAttributes.addFlashAttribute("message", message);
 		return "redirect:/userlist.do";//重定向到用户管理界面
 	}
-	 ```
-  ### 在jsp页面直接使用el表达式{message}即可展示传递的信息。
+ ```
+### 在jsp页面直接使用el表达式{message}即可展示传递的信息。
+
 ## controler或者services层与dao层之间数据交互
 * 持久层的dao使用mybitis，它有两种方式来处理sql，其一使用注解，其二使用xml的mapper。当然两种均时手动写sql。
 首先相关配置：数据源配置、事务管理略
 在spring的配置文件application.xml中 <import resource="applicationContext-mybatis.xml" />导入mybits的配置文件
-		 ```xml
+ ```xml
  <!--  开启二级缓存 -->
       <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
         <property name="dataSource" ref="dataSource" />  
@@ -220,11 +223,11 @@ return "views/login";
     </bean> 
     <!--导入缓存的配置文件，具体参照项目-->
     <import resource="applicationContext-ehcache.xml" />
-	    ```
+ ```
    以下为具体的使用方法：
   1. 使用mapper
    定义dao的接口ActivitiWorkflowLogin，下面为部分方法。
-	    ```java
+```java
     /**
      * 验证登录,mybits传递多个参数时，有三种方式1、如下。2，where user_name = #{0} and user_area=#{1}#{0}代表接收的是dao层中的第一个参数，
      * #{1}代表dao层中第二参数，更多参数一致往后加即可。3，采用Map传多参数.Public User selectUser(Map paramMap);
@@ -237,11 +240,10 @@ return "views/login";
 	public User getUserInfo(String userId);
 	
   //略
-	 ```
+ ```
   * 所有这些dao的接口方法要与定义的mapper.xml文件对应如下：
-  首先要定义<mapper namespace="com.xzg.dao.ActivitiWorkflowLogin">用于识别dao
-  部分xml的sql
-		 ```xml
+  首先要定义<mapper namespace="com.xzg.dao.ActivitiWorkflowLogin">用于识别dao,部分xml的sql
+ ```xml
   <!-- 开启本mapper的namespace下的二级缓存-->
 <cache />
 <select id="getListUser" useCache="true" resultType="com.xzg.domain.User">
@@ -253,9 +255,9 @@ return "views/login";
 <select id="login"  useCache="true"  flushCache="true" resultType="java.lang.Integer">    
 	select count(*)  from User where userId = #{userId}  and password = #{password} 
 </select>
-	```
+```
 然后设计ado的实现类ActivitiWorkflowLoginImple.java
-	```java
+```java
 @Service(value ="ActivitiWorkflowLoginImple")//用于识别该类为ActivitiWorkflowLogin的dao实现类
 public class ActivitiWorkflowLoginImple implements ActivitiWorkflowLogin {
 //将dao接口注入
@@ -276,7 +278,7 @@ public class ActivitiWorkflowLoginImple implements ActivitiWorkflowLogin {
 		User user = activitiWorkflowLogin.getUserInfo(userid);
 		return user;
 	}
-	```
+```
   * 接下来就是在service或controler中的使用，controller或service中可以直接注入dao接口，但是名称需要用之前实现了dao接口
   的实现类ActivitiWorkflowLoginImple中注解@Service(value="ActivitiWorkflowLoginImple")的name，这样在通过接口调用方法。同理在service中调用也相同。
   ```java
@@ -293,11 +295,11 @@ public interface StudentMapper
             VALUES(#{studId},#{name},#{email},#{address.addrId},#{phone})")  
     int insertStudent(Student student);  
 } 
-	    ```
+ ```
 * 至于的接口实现类和controler、service调用不变。具体的相关内容课参考mybits的使用文档，内容很详细。
 ## 以上就是ssm框架的大致实现方式，当然这也仅仅是部分内容，具体还是用参考相关使用文档
 下面在说点z_tree的，下载好插件后，一般只需要改改其中一个函数，当然必须要有jQuery
-	    ```html
+ ```html
 function onLoadZTree(url){
   var treeNodes;
   $.ajax({
@@ -358,7 +360,7 @@ function onLoadZTree(url){
   var t = $("#user_tree");
   t = $.fn.zTree.init(t,setting,treeNodes);
 }
-	    ```
+ ```
 其他关于具体的相关的包括用户权限角色、cookie加密登录、activiti使用方法等等具体在项目中
 下面是实现cookie登录的思路
 1． 保存用户信息阶段：
