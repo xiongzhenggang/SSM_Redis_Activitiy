@@ -36,8 +36,8 @@ var url ='${ctx}/saveCookie.do';<br />
     		async: true,
     		dataType : "json",
     		success:function(data)
-    ```
-			同样接受数据对应的两种方式：
+```
+同样接受数据对应的两种方式：
     1. el表达式
 ```jsp
     <c:forEach var="user" items="${listuser }">
@@ -76,7 +76,7 @@ var url ='${ctx}/saveCookie.do';<br />
     			}
     		});
  ```
-### 接下来就是后台的springmvc的controller接受数据和返回数据的方式（注意注解的意义）============================
+### 接下来就是后台的springmvc的controller接受数据和返回数据的方式（注意注解的意义）
  从视图层接收数据
  1. 从普通form表单传递的数据处理
  * 方式1，直接@RequestParam("username")的注解方式取得form表单name为username的值，本质上等同于servlet中的getparameter
