@@ -21,7 +21,7 @@
    </form>
    ```
 2. 使用ajax
-```
+```js
 var url ='${ctx}/saveCookie.do';<br />
 	   var username= $("input[id='username']").val();
 	   var password= $("input[id='password']").val();
@@ -55,7 +55,7 @@ var url ='${ctx}/saveCookie.do';<br />
  ```
 2. ajax的回调函数（json格式）
 这里就需要要求controller返回值为json格式的数据了
- ```
+ ```js
 		$.ajax({
     		type:"POST",       
     		url:url,  /* 这里就是action名+要执行的action中的函数 */
@@ -84,14 +84,14 @@ var url ='${ctx}/saveCookie.do';<br />
 	 @RequestMapping(value="/loginin.do",method={RequestMethod.POST,RequestMethod.GET})
 public String loginin(@RequestParam("username")String userid,@RequestParam("password")String password)
 ```
-	 通过这中方式直接取得。
+ 通过这中方式直接取得。
 * 方式2、使用restful风格的取得
 ```java
 	 @RequestMapping(value="/memberofgroup/{groupId}.do",method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView memberOfGroup(@PathVariable("groupId")String groupId)
-  ```
-	 其中{groupId}.do应该对应前台的action地址
 ```
+其中{groupId}.do应该对应前台的action地址
+```xml
 	 <a href="${ctx }/memberofgroup/${group.roleId}.do" target="main">查看该组的用户</a>
 ```
 对应方可获取数据。当然记得在方法中使用@PathVariable注解。
@@ -103,7 +103,6 @@ public ModelAndView showUdateUser(User user)如同与方式1类似
 ```
 2. 从ajax获取的json数据 关键注解@ResponseBody//在springMVC中提供了JSON响应的支持
 * 方式1
-
  ```java
 	 @RequestMapping(value="/showUpdateAuthorityById.do",method={RequestMethod.POST,RequestMethod.GET})
 @ResponseBody
@@ -114,10 +113,10 @@ String authorityId;
 	}else{
 		authorityId="";
 	}
-	 ```
-  ### 其中map用于节后前台传递的json数据，当然也可以使用list、set等集合接收。
+```
+ ### 其中map用于节后前台传递的json数据，当然也可以使用list、set等集合接收。
   controller返回视图或数据：
-  * 方式1、ModelAndView返回渲染后的视图包括数据
+* 方式1、ModelAndView返回渲染后的视图包括数据
 ```java
 List<Authority> authoritys = activitiWorkflowLogin.authorityList();
 	ModelAndView modelAndView=new ModelAndView();
@@ -125,7 +124,7 @@ List<Authority> authoritys = activitiWorkflowLogin.authorityList();
 	modelAndView.addObject("authoritys", authoritys);
 	return modelAndView;
   ```
- setViewName的方法设置返回jsp视图的地址，addObject添加的是要返回的数据，在前端页面可以直接使用el表达式表示
+setViewName的方法设置返回jsp视图的地址，addObject添加的是要返回的数据，在前端页面可以直接使用el表达式表示
 
 * 方式2、只返回数据一般是视图层的ajax调用成功后获取相应的json数据。
 ```java
@@ -144,7 +143,7 @@ List<Authority> authoritys = activitiWorkflowLogin.authorityList();
 		return mapout;
 	}
 ```
- 从视图层获取ajax异步传递json数据然后返回json数据的方法如上方法。在ajax成功后直接调用	
+从视图层获取ajax异步传递json数据然后返回json数据的方法如上方法。在ajax成功后直接调用	
 ```xml
 	result+='用户邮箱：<input id="email"  name="email" type="text" value="'+ data.user.email+'"/>' ;
 ```
@@ -241,10 +240,9 @@ return "views/login";
 	
   //略
  ```
-  * 所有这些dao的接口方法要与定义的mapper.xml文件对应如下：
-  首先要定义<mapper namespace="com.xzg.dao.ActivitiWorkflowLogin">用于识别dao,部分xml的sql
- ```xml
-  <!-- 开启本mapper的namespace下的二级缓存-->
+* 所有这些dao的接口方法要与定义的mapper.xml文件对应如下： 首先要定义<mapper namespace="com.xzg.dao.ActivitiWorkflowLogin">用于识别dao,部分xml的sql
+```xml
+	 <!-- 开启本mapper的namespace下的二级缓存-->
 <cache />
 <select id="getListUser" useCache="true" resultType="com.xzg.domain.User">
 	select * from user
@@ -281,7 +279,7 @@ public class ActivitiWorkflowLoginImple implements ActivitiWorkflowLogin {
 ```
   * 接下来就是在service或controler中的使用，controller或service中可以直接注入dao接口，但是名称需要用之前实现了dao接口
   的实现类ActivitiWorkflowLoginImple中注解@Service(value="ActivitiWorkflowLoginImple")的name，这样在通过接口调用方法。同理在service中调用也相同。
-  ```java
+```java
 		@Controller
 public class AccountController {
 	//修改自定义用户
@@ -295,11 +293,11 @@ public interface StudentMapper
             VALUES(#{studId},#{name},#{email},#{address.addrId},#{phone})")  
     int insertStudent(Student student);  
 } 
- ```
+```
 * 至于的接口实现类和controler、service调用不变。具体的相关内容课参考mybits的使用文档，内容很详细。
 ## 以上就是ssm框架的大致实现方式，当然这也仅仅是部分内容，具体还是用参考相关使用文档
 下面在说点z_tree的，下载好插件后，一般只需要改改其中一个函数，当然必须要有jQuery
- ```html
+```html
 function onLoadZTree(url){
   var treeNodes;
   $.ajax({
