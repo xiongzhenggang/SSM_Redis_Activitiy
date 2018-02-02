@@ -9,6 +9,8 @@
  其一：是关于用户、角色、权限的设计，通过jQuery z_tree插件，将查询的权限菜单以json的形式传递给z_tree借助该插件
  可以很容易的实现导航栏功能和角色的对应。
  其二：本练习使用的工作流框架为activiti，通过覆盖原有的api设计自定义的用户角色信息。流程为请假流程
+ * 本项目的activit是基于activitie5。当前版本activiti6的实现方式参
+ ！[springboot集成activitie6及相关用户自定义实现](https://github.com/xiongzhenggang/SpringBootLearn/tree/master/springboot-shiro)
  其三：登陆上设计单点登录和本地cookie自动的登录
  ## ssm主要技术实现方式：
 * 视图使用jsp技术，传递数据到控制层有两种方式如下：
