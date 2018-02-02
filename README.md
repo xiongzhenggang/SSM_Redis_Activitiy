@@ -10,7 +10,7 @@
  可以很容易的实现导航栏功能和角色的对应。
  
  其二：本练习使用的工作流框架为activiti，通过覆盖原有的api设计自定义的用户角色信息。流程为请假流程
- * 本项目的activit是基于activitie5。当前版本activiti6的实现方式参
+ * 本项目的activit是基于activitie5。当前版本activiti6的实现方式参考：
  ！[springboot集成activitie6及相关用户自定义实现](https://github.com/xiongzhenggang/SpringBootLearn/tree/master/springboot-shiro)
  
  其三：登陆上设计单点登录和本地cookie自动的登录
